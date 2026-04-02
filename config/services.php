@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    'wechat_pay' => [
+        'app_id' => env('WECHAT_PAY_APP_ID'),
+        'mch_id' => env('WECHAT_PAY_MCH_ID'),
+        'serial_no' => env('WECHAT_PAY_SERIAL_NO'),
+        'private_key_path' => env('WECHAT_PAY_PRIVATE_KEY_PATH'),
+        'api_v3_key' => env('WECHAT_PAY_API_V3_KEY'),
+        'notify_url' => env('WECHAT_PAY_NOTIFY_URL'),
+        'public_key_id' => env('WECHAT_PAY_PUBLIC_KEY_ID'),
+        'public_key_path' => env('WECHAT_PAY_PUBLIC_KEY_PATH'),
+    ],
+
 ];

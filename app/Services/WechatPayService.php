@@ -20,7 +20,7 @@ class WechatPayService
     {
         $path = '/v3/pay/transactions/native';
         $payload = [
-           // 'appid' => $this->config('app_id'),
+            'appid' => $this->config('app_id')??'',
             'mchid' => $this->config('mch_id'),
             'description' => $this->buildDescription($order),
             'out_trade_no' => $order->order_no,

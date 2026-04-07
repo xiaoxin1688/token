@@ -20,7 +20,7 @@ class WechatPayService
     {
         $path = '/v3/pay/transactions/native';
         $payload = [
-            'appid' => $this->config('app_id')??'',
+//            'appid' => $this->config('app_id')??'',
             'mchid' => $this->config('mch_id'),
             'description' => $this->buildDescription($order),
             'out_trade_no' => $order->order_no,
@@ -28,6 +28,14 @@ class WechatPayService
             'amount' => [
                 'total' => $this->toFen((string) $order->pay_amount),
                 'currency' => 'CNY',
+            ],
+            'scene_info' => [ // <= 这里是 H5 特有字段
+                'payer_client_ip' => $_SERVER['REMOTE_ADDR'],
+                'h5_info' => [
+                    'type' => 'Wap',
+                    'wap_url' => 'https://aitoken-ai.com.cn/', // 你的 PC 网站域名
+                    'wap_name' => '网站名称',
+                ],
             ],
         ];
 

@@ -36,7 +36,7 @@ return [
     ],
 
     'wechat_pay' => [
-//        'app_id' => env('WECHAT_PAY_APP_ID'),
+        'app_id' => env('WECHAT_PAY_APP_ID'),
         'mch_id' => env('WECHAT_PAY_MCH_ID'),
         'serial_no' => env('WECHAT_PAY_SERIAL_NO'),
         'private_key_path' => env('WECHAT_PAY_PRIVATE_KEY_PATH'),

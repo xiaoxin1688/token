@@ -159,5 +159,6 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+    <script src="{{ asset('vendor/dcat-admin/dcat/plugins/vendors.min.js') }}"></script>
+    <script src="{{ asset('vendor/dcat-admin/dcat/plugins/jquery-qrcode/dist/jquery-qrcode.min.js') }}"></script>
 @endpush

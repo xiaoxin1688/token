@@ -1,4 +1,5 @@
 import './bootstrap';
+import { buildPaidSuccessText } from './package-payment-ui.js';
 
 const state = {
     billingCycle: 'month',
@@ -70,11 +71,55 @@ function initPackagePage() {
         orderNoNode.textContent = '-';
         summaryNode.textContent = '请使用微信扫码完成支付。';
         statusTextNode.textContent = '二维码已生成，请使用微信扫描支付。';
+        successTextNode.textContent = buildPaidSuccessText();
         successTextNode.classList.add('hidden');
         statusTextNode.classList.remove('hidden');
         if (qrcodeNode) {
             qrcodeNode.innerHTML = '';
         }
+    }
+
+    function renderPaymentQrCode(codeUrl) {
+        if (!qrcodeNode || !codeUrl) {
+            return false;
+        }
+
+        qrcodeNode.innerHTML = '';
+
+        if (window.jQuery?.fn?.qrcode) {
+            window.jQuery(qrcodeNode).qrcode({
+                render: 'canvas',
+                text: codeUrl,
+                size: 208,
+                fill: '#050914',
+                background: '#ffffff',
+            });
+
+            return true;
+        }
+
+        if (window.QRCode?.toCanvas) {
+            window.QRCode.toCanvas(codeUrl, {
+                width: 208,
+                margin: 1,
+                color: {
+                    dark: '#050914',
+                    light: '#ffffff',
+                },
+            }, (error, canvas) => {
+                if (error) {
+                    statusTextNode.textContent = '二维码生成失败，请稍后重试。';
+                    return;
+                }
+
+                qrcodeNode.innerHTML = '';
+                qrcodeNode.appendChild(canvas);
+            });
+
+            return true;
+        }
+
+        return false;
     }
 
     async function createOrder(button) {
@@ -115,28 +160,7 @@ function initPackagePage() {
             orderNoNode.textContent = order.order_no ?? '-';
             summaryNode.textContent = `请使用微信扫码支付 ${order.package_name ?? packageName}`;
 
-            if (qrcodeNode) {
-                qrcodeNode.innerHTML = '';
-            }
-
-            if (window.QRCode && qrcodeNode && order.code_url) {
-                window.QRCode.toCanvas(order.code_url, {
-                    width: 208,
-                    margin: 1,
-                    color: {
-                        dark: '#050914',
-                        light: '#ffffff',
-                    },
-                }, (error, canvas) => {
-                    if (error) {
-                        statusTextNode.textContent = '二维码生成失败，请稍后重试。';
-                        return;
-                    }
-
-                    qrcodeNode.innerHTML = '';
-                    qrcodeNode.appendChild(canvas);
-                });
-            } else {
+            if (!renderPaymentQrCode(order.code_url)) {
                 statusTextNode.textContent = '二维码库未加载，请刷新页面重试。';
             }
         } catch (error) {
@@ -167,12 +191,10 @@ function initPackagePage() {
             const order = payload.data ?? {};
 
             if (Number(order.pay_status) === 1) {
+                successTextNode.textContent = buildPaidSuccessText(order.paid_at);
                 successTextNode.classList.remove('hidden');
                 statusTextNode.classList.add('hidden');
                 summaryNode.textContent = '支付成功，系统已确认订单状态。';
-                if (order.paid_at) {
-                    statusTextNode.textContent = `支付成功时间：${order.paid_at}`;
-                }
             } else {
                 statusTextNode.textContent = '尚未收到支付成功通知，请完成扫码后再次刷新。';
             }

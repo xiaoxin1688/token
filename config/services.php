@@ -44,6 +44,10 @@ return [
         'notify_url' => env('WECHAT_PAY_NOTIFY_URL'),
         'public_key_id' => env('WECHAT_PAY_PUBLIC_KEY_ID'),
         'public_key_path' => env('WECHAT_PAY_PUBLIC_KEY_PATH'),
+        'connect_timeout' => env('WECHAT_PAY_CONNECT_TIMEOUT', 3),
+        'timeout' => env('WECHAT_PAY_TIMEOUT', 15),
+        'retry_times' => env('WECHAT_PAY_RETRY_TIMES', 2),
+        'retry_sleep_ms' => env('WECHAT_PAY_RETRY_SLEEP_MS', 250),
     ],
 
 ];
